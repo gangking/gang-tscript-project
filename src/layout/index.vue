@@ -33,7 +33,7 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .el-container {
-  min-height: 100vh;
+  max-height: 100vh;
   min-width: 980px;
 }
 .el-aside {
@@ -44,5 +44,7 @@ export default Vue.extend({
 }
 .el-main {
   background: #e9eef3;
+  height: calc(100% - 60px);
+  box-sizing: border-box;
 }
 </style>

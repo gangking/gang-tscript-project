@@ -38,16 +38,12 @@ export default Vue.extend({
   },
   created () {
     this.loadUserInfo()
-    this.loadUserInfo()
-    this.loadUserInfo()
-    this.loadUserInfo()
   },
   methods: {
     async loadUserInfo () {
       const { data } = await getUserInfo()
-      console.log(data)
+      // console.log(data)
       this.userInfo = data.content
-      console.log('loadUserInfo')
     },
     handleLogout () {
       this.$confirm('即将推出页面, 是否继续?', '提示', {

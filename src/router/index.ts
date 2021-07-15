@@ -16,33 +16,27 @@ const routes: Array<RouteConfig> = [
   {
     path: '/',
     component: Layout,
+    meta: {
+      requiresAuth: true // 自定义数据想放啥放啥
+    },
     children: [
       {
         path: '', // 默认子路由
         name: 'home',
         component: () =>
-          import(/* webpackChunkName: 'home' */ '@/views/home/index.vue'),
-        meta: {
-          requiresAuth: true // 自定义数据想放啥放啥
-        } // 默认就是一个空对象
+          import(/* webpackChunkName: 'home' */ '@/views/home/index.vue')
       },
       {
         path: '/role',
         name: 'role',
         component: () =>
-          import(/* webpackChunkName: 'role' */ '@/views/role/index.vue'),
-        meta: {
-          requiresAuth: true // 自定义数据想放啥放啥
-        } // 默认就是一个空对象
+          import(/* webpackChunkName: 'role' */ '@/views/role/index.vue')
       },
       {
         path: '/menu',
         name: 'menu',
         component: () =>
-          import(/* webpackChunkName: 'menu' */ '@/views/menu/index.vue'),
-        meta: {
-          requiresAuth: true // 自定义数据想放啥放啥
-        } // 默认就是一个空对象
+          import(/* webpackChunkName: 'menu' */ '@/views/menu/index.vue')
       },
       {
         path: '/resource',
@@ -50,37 +44,25 @@ const routes: Array<RouteConfig> = [
         component: () =>
           import(
             /* webpackChunkName: 'resource' */ '@/views/resource/index.vue'
-          ),
-        meta: {
-          requiresAuth: true // 自定义数据想放啥放啥
-        } // 默认就是一个空对象
+          )
       },
       {
         path: '/course',
         name: 'course',
         component: () =>
-          import(/* webpackChunkName: 'course' */ '@/views/course/index.vue'),
-        meta: {
-          requiresAuth: true // 自定义数据想放啥放啥
-        } // 默认就是一个空对象
+          import(/* webpackChunkName: 'course' */ '@/views/course/index.vue')
       },
       {
         path: '/user',
         name: 'user',
         component: () =>
-          import(/* webpackChunkName: 'user' */ '@/views/user/index.vue'),
-        meta: {
-          requiresAuth: true // 自定义数据想放啥放啥
-        } // 默认就是一个空对象
+          import(/* webpackChunkName: 'user' */ '@/views/user/index.vue')
       },
       {
         path: '/advert',
         name: 'advert',
         component: () =>
-          import(/* webpackChunkName: 'advert' */ '@/views/advert/index.vue'),
-        meta: {
-          requiresAuth: true // 自定义数据想放啥放啥
-        } // 默认就是一个空对象
+          import(/* webpackChunkName: 'advert' */ '@/views/advert/index.vue')
       },
       {
         path: '/advert-space',
@@ -89,6 +71,51 @@ const routes: Array<RouteConfig> = [
           import(
             /* webpackChunkName: 'advert-space' */ '@/views/advert-space/index.vue'
           )
+      },
+      {
+        path: '/menu/create',
+        name: 'menu-create',
+        component: () =>
+          import(
+            /* webpackChunkName: 'menu-create-edit' */ '@/views/menu/create.vue'
+          )
+      },
+      {
+        path: '/menu/:id/edit',
+        name: 'menu-edit',
+        component: () =>
+          import(
+            /* webpackChunkName: 'menu-create-edit' */ '@/views/menu/edit.vue'
+          )
+      },
+      {
+        path: '/role/:roleId/alloc-menu',
+        name: 'alloc-menu',
+        component: () => import(/* webpackChunkName: 'alloc-menu' */ '@/views/role/alloc-menu.vue'),
+        props: true // 将路由路径参数映射到组件的 props 数据中
+      },
+      {
+        path: '/role/:roleId/alloc-resource',
+        name: 'alloc-resource',
+        component: () => import(/* webpackChunkName: 'alloc-menu' */ '@/views/role/alloc-resource.vue'),
+        props: true // 将路由路径参数映射到组件的 props 数据中
+      },
+      {
+        path: '/course/create',
+        name: 'course-create',
+        component: () => import(/* webpackChunkName: 'course-create' */ '@/views/course/create.vue')
+      },
+      {
+        path: '/course/:courseId/edit',
+        name: 'course-edit',
+        component: () => import(/* webpackChunkName: 'course-edit' */ '@/views/course/edit.vue'),
+        props: true
+      },
+      {
+        path: '/course/:courseId/section',
+        name: 'course-section',
+        component: () => import(/* webpackChunkName: 'course-section' */ '@/views/course/section.vue'),
+        props: true
       }
     ]
   },
