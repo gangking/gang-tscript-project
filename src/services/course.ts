@@ -28,7 +28,11 @@ export const saveOrUpdateCourse = (data: any) => {
   })
 }
 
-export const uploadCourseImage = (data: any, onUploadProgress: (progressEvent: ProgressEvent) => void) => {
+// ? 表示可选参数
+export const uploadCourseImage = (
+  data: any,
+  onUploadProgress?: (progressEvent: ProgressEvent) => void
+) => {
   // 该接口要求的请求数据类型是：multipart/form-data
   // 所以需要提交 FormData 数据对象
   return request({

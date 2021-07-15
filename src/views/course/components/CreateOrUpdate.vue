@@ -12,7 +12,7 @@
       </el-steps>
     </div>
     <el-form label-width="80px">
-      <div v-show="activeStep === 0">
+      <div v-if="activeStep === 0">
         <el-form-item label="课程名称">
           <el-input v-model="course.courseName"></el-input>
         </el-form-item>
@@ -45,7 +45,7 @@
           ></el-input-number>
         </el-form-item>
       </div>
-      <div v-show="activeStep === 1">
+      <div v-else-if="activeStep === 1">
         <el-form-item label="课程封面">
           <!--
             upload 上传文件组件，它支持自动上传，你只需要把上传需要参数配置一下就可以了
@@ -57,19 +57,13 @@
               1. 它会给子组件传递一个名字叫 value 的数据（Props）
               2. 默认监听 input 事件，修改绑定的数据（自定义事件）
             -->
-          <course-image
-            v-model="course.courseListImg"
-            :limit="5"
-          />
+          <course-image v-model="course.courseListImg" :limit="5" />
         </el-form-item>
         <el-form-item label="介绍封面">
-          <course-image
-            :limit="5"
-            v-model="course.courseImgUrl"
-          />
+          <course-image :limit="5" v-model="course.courseImgUrl" />
         </el-form-item>
       </div>
-      <div v-show="activeStep === 2">
+      <div v-else-if="activeStep === 2">
         <el-form-item label="售卖价格">
           <el-input v-model.number="course.discounts" type="number">
             <template slot="append">元</template>
@@ -89,7 +83,7 @@
           <el-input v-model="course.discountsTag"></el-input>
         </el-form-item>
       </div>
-      <div v-show="activeStep === 3">
+      <div v-else-if="activeStep === 3">
         <el-form-item label="限时秒杀开关">
           <el-switch
             v-model="course.activityCourse"
@@ -116,18 +110,24 @@
             />
           </el-form-item>
           <el-form-item label="秒杀价">
-            <el-input v-model.number="course.activityCourseDTO.amount" type="number">
+            <el-input
+              v-model.number="course.activityCourseDTO.amount"
+              type="number"
+            >
               <template slot="append">元</template>
             </el-input>
           </el-form-item>
           <el-form-item label="秒杀库存">
-            <el-input v-model.number="course.activityCourseDTO.stock" type="number">
+            <el-input
+              v-model.number="course.activityCourseDTO.stock"
+              type="number"
+            >
               <template slot="append">个</template>
             </el-input>
           </el-form-item>
         </template>
       </div>
-      <div v-show="activeStep === 4">
+      <div v-else-if="activeStep === 4">
         <el-form-item label="课程详情">
           <text-editor v-model="course.courseDescriptionMarkDown" />
           <!-- <el-input v-model="course.courseDescriptionMarkDown" type="textarea"></el-input> -->
@@ -142,10 +142,7 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button
-            type="primary"
-            @click="handleSave"
-          >保存</el-button>
+          <el-button type="primary" @click="handleSave">保存</el-button>
         </el-form-item>
       </div>
       <el-form-item v-if="activeStep >= 0 && activeStep < 4">
@@ -157,10 +154,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import {
-  saveOrUpdateCourse,
-  getCourseById
-} from '@/services/course'
+import { saveOrUpdateCourse, getCourseById } from '@/services/course'
 import CourseImage from './CourseImage.vue'
 import TextEditor from '@/components/TextEditor/index.vue'
 import moment from 'moment'
@@ -238,11 +232,19 @@ export default Vue.extend({
     async loadCourse () {
       const { data } = await getCourseById(this.courseId)
       const { activityCourseDTO } = data.data
-      activityCourseDTO.beginTime = moment(activityCourseDTO.beginTime).format('YYYY-MM-DD')
-      activityCourseDTO.endTime = moment(activityCourseDTO.endTime).format('YYYY-MM-DD')
-      this.course = data.data
+      console.log(data)
+      if (activityCourseDTO) {
+        activityCourseDTO.beginTime = moment(
+          activityCourseDTO.beginTime
+        ).format('YYYY-MM-DD')
+        activityCourseDTO.endTime = moment(activityCourseDTO.endTime).format(
+          'YYYY-MM-DD'
+        )
+        this.course = data.data
+      } else {
+        this.$message.error('错误数据无法编辑')
+      }
     },
-
     async handleSave () {
       const { data } = await saveOrUpdateCourse(this.course)
       if (data.code === '000000') {

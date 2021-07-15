@@ -4,10 +4,9 @@
     <el-card>
       <div class="card-header" slot="header">
         {{ course.courseName }}
-        <el-button
-          type="primary"
-          @click="handleShowAddSection"
-        >添加阶段</el-button>
+        <el-button type="primary" @click="handleShowAddSection"
+          >添加阶段</el-button
+        >
       </div>
       <el-tree
         :data="sections"
@@ -21,11 +20,12 @@
           <span>{{ node.label }}</span>
           <!-- section -->
           <span v-if="data.sectionName" class="actions">
-            <el-button @click.stop="handleEditSectionShow(data)">编辑</el-button>
-            <el-button
-              type="primary"
-              @click.stop="handleShowAddLesson(data)"
-            >添加课时</el-button>
+            <el-button @click.stop="handleEditSectionShow(data)"
+              >编辑</el-button
+            >
+            <el-button type="primary" @click.stop="handleShowAddLesson(data)"
+              >添加课时</el-button
+            >
             <el-select
               class="select-status"
               v-model="data.status"
@@ -39,8 +39,25 @@
           </span>
           <!-- lession -->
           <span v-else class="actions">
-            <el-button @click="handleShowEditLesson(data, node.parent.data)">编辑</el-button>
-            <el-button type="success">上传视频</el-button>
+            <el-button @click="handleShowEditLesson(data, node.parent.data)"
+              >编辑</el-button
+            >
+            <el-button
+              type="success"
+              @click="
+                $router.push({
+                  name: 'course-video',
+                  params: {
+                    courseId
+                  },
+                  query: {
+                    sectionId: node.parent.id,
+                    lessonId: data.id
+                  }
+                })
+              "
+              >上传视频</el-button
+            >
             <el-select
               class="select-status"
               v-model="data.status"
@@ -58,10 +75,7 @@
     <!-- /阶段列表 -->
 
     <!-- 添加阶段 -->
-    <el-dialog
-      title="添加课程阶段"
-      :visible.sync="isAddSectionShow"
-    >
+    <el-dialog title="添加课程阶段" :visible.sync="isAddSectionShow">
       <el-form ref="section-form" :model="section" label-width="70px">
         <el-form-item label="课程名称">
           <el-input
@@ -74,7 +88,11 @@
           <el-input v-model="section.sectionName" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="章节描述" prop="description">
-          <el-input v-model="section.description" type="textarea" autocomplete="off"></el-input>
+          <el-input
+            v-model="section.description"
+            type="textarea"
+            autocomplete="off"
+          ></el-input>
         </el-form-item>
         <el-form-item label="章节排序" prop="orderNum">
           <el-input-number v-model="section.orderNum"></el-input-number>
@@ -88,10 +106,7 @@
     <!-- /添加阶段 -->
 
     <!-- 添加课时 -->
-    <el-dialog
-      title="添加课时"
-      :visible.sync="isAddLessonShow"
-    >
+    <el-dialog title="添加课时" :visible.sync="isAddLessonShow">
       <el-form ref="lesson-form" :model="lesson" label-width="100px">
         <el-form-item label="课程名称">
           <el-input
@@ -101,13 +116,21 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="章节名称" prop="sectionName">
-          <el-input :value="lesson.sectionName" disabled autocomplete="off"></el-input>
+          <el-input
+            :value="lesson.sectionName"
+            disabled
+            autocomplete="off"
+          ></el-input>
         </el-form-item>
         <el-form-item label="课时名称" prop="sectionName">
           <el-input v-model="lesson.theme" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="时长" prop="description">
-          <el-input v-model.number="lesson.duration" type="number" autocomplete="off">
+          <el-input
+            v-model.number="lesson.duration"
+            type="number"
+            autocomplete="off"
+          >
             <template slot="append">分钟</template>
           </el-input>
         </el-form-item>
@@ -202,7 +225,8 @@ export default Vue.extend({
     },
 
     handleShowAddSection () {
-      this.section = { // 防止数据还是编辑时获取的数据
+      this.section = {
+        // 防止数据还是编辑时获取的数据
         courseId: this.courseId,
         sectionName: '',
         description: '',
@@ -268,27 +292,33 @@ export default Vue.extend({
       // draggingNode 拖动的节点
       // dropNode 放置的目标节点
       // type：'prev'、'inner' 和 'next'，分别表示放置在目标节点前、插入至目标节点和放置在目标节点后
-      return draggingNode.data.sectionId === dropNode.data.sectionId && type !== 'inner'
+      return (
+        draggingNode.data.sectionId === dropNode.data.sectionId &&
+        type !== 'inner'
+      )
     },
 
     async handleSort (dragNode: any, dropNode: any, type: any, event: any) {
+      console.log(type, event)
       this.isLoading = true
       try {
-        await Promise.all(dropNode.parent.childNodes.map((item: any, index: number) => {
-          if (dragNode.data.lessonDTOS) {
-            // 阶段
-            return saveOrUpdateSection({
-              id: item.data.id,
-              orderNum: index + 1
-            })
-          } else {
-            // 课时
-            return saveOrUpdateLesson({
-              id: item.data.id,
-              orderNum: index + 1
-            })
-          }
-        }))
+        await Promise.all(
+          dropNode.parent.childNodes.map((item: any, index: number) => {
+            if (dragNode.data.lessonDTOS) {
+              // 阶段
+              return saveOrUpdateSection({
+                id: item.data.id,
+                orderNum: index + 1
+              })
+            } else {
+              // 课时
+              return saveOrUpdateLesson({
+                id: item.data.id,
+                orderNum: index + 1
+              })
+            }
+          })
+        )
         this.$message.success('排序成功')
       } catch (err) {
         console.log(err)

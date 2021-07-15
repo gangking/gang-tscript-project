@@ -40,7 +40,7 @@ export default Vue.extend({
   background: #b3dce6;
 }
 .el-header {
-  background: #b3c0d1;
+  background: white;
 }
 .el-main {
   background: #e9eef3;
