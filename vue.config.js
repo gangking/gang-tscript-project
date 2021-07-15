@@ -11,7 +11,7 @@ module.exports = {
       }
     }
   },
-  // 配置代理
+  // 配置代理，此代理仅针对本地开发服务
   devServer: {
     proxy: {
       '/boss': {
